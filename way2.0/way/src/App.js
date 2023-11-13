@@ -35,15 +35,6 @@ function App() {
   const [route2, setRoute2] = useState('')
   const [exceldata, setExceldata] = useState({})
 
-  const outerBounds = [
-    [50.505, -29.09],
-    [52.505, 29.09],
-  ]
-  const innerBounds = [
-    [49.505, -2.09],
-    [53.505, 2.09],
-  ]
-  const [outerBounds2, setOuterBounds2] = useState({});
 
 // JSON used for testing the search bar 
 
@@ -69,7 +60,7 @@ function App() {
     query();
   // the state 'test-update is used to upate other states'
     }, [test_update])
-     
+    console.log(test_update)
   //update table rows 
     useEffect(() => {
       const query = async () => {
@@ -100,7 +91,37 @@ function App() {
   
     }, [testgj])
 
-   // function to handle chaning of map frames   
+    const outerBounds = [
+      [50.505, -29.09],
+      [52.505, 29.09],
+    ]
+    const innerBounds = [
+      [49.505, -2.09],
+      [53.505, 2.09],
+    ]
+    const [outerBounds2, setOuterBounds2] = useState({});
+  
+
+    useEffect(() => {
+      const queryt = async () => {
+        const bbox = await fetch(`http://localhost:5000/bbx`)
+        const parseResposnec = await bbox.json();
+        // console.log(parseResposnec)
+        setOuterBounds2(parseResposnec)
+  
+        //setQueried ()
+      }
+      queryt();
+  
+    }, [testgj])
+    console.log(outerBounds2)
+    
+  //set default bounds for map frame   
+  const corner1 = [outerBounds2[1], outerBounds2[0]];
+  const corner2 = [outerBounds2[3], outerBounds2[2]];
+  const outerBounds3 = [corner1, corner2];
+   
+  // function to handle chaning of map frames   
    function SetBoundsRectangles() {
     const [bounds, setBounds] = useState(outerBounds)
     const map = useMap()
@@ -117,10 +138,7 @@ function App() {
       [map],
     )
   } 
-  //set default bounds for map frame   
-  const corner1 = [outerBounds2[1], outerBounds2[0]];
-  const corner2 = [outerBounds2[3], outerBounds2[2]];
-  const outerBounds3 = [corner1, corner2];
+
   
   
   //suggestion handler in the search bar 
@@ -410,6 +428,7 @@ const onChangeHandler = (text) => {
       </Marker>
     );
   })}
+        
           <GeoJSON key={Math.random()} data={route} />
  
 
@@ -423,7 +442,7 @@ const onChangeHandler = (text) => {
         
 
 
-
+      
         </MapContainer>
      
 

@@ -4,10 +4,11 @@ const { body, validationResult } = require('express-validator');
 var OSRM = require('osrm')
 //var osrmDecode = require("osrm-geojson");
 var turf = require('@turf/turf');
-var format = require('pg-format');
 const cors = require('cors');
 app.use(cors())
 app.listen(5000);
+var format = require('pg-format');
+
 const {Client } = require('pg');
 //const res = require('express/lib/response');
 const client = new Client()
@@ -123,6 +124,7 @@ app.get ("/bbx", async (req,res) => {
 // add orders to the orders table 
   app.post ("/orders", async (req,res) => {
     try {
+      res.setHeader("Access-Control-Allow-Origin", "*");
       const {order_type} = req.body;
       const orders = await pool.query ("insert into odrers (order_type) values ($1) returning order_type",[order_type]);
       res.json(orders);
